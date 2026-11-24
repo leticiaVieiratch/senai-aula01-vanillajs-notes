@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aplicação Vanilla JS - Atividade 01 da disciplina Frameworks Front-end">
+  <title>DevTask & Notes | Vanilla JS</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Fonte Google Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Cabeçalho -->
+    <header class="main-header">
+      <div class="header-content">
+        <div class="brand">
+          <span class="badge">SENAI • ADS</span>
+          <h1>DevTask & Notes</h1>
+          <p class="subtitle">Aplicação Web Interativa em Vanilla JavaScript</p>
+        </div>
+        <div class="header-actions">
+          <div class="clock-display" id="clockDisplay">--:--:--</div>
+          <button id="themeToggleBtn" class="btn btn-outline" title="Alternar tema">
+            <span class="theme-icon" id="themeIcon">🌙</span>
+            <span class="theme-text" id="themeText">Escuro</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Métricas / Dashboard -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon total">📋</div>
+        <div class="metric-info">
+          <span class="metric-label">Total de Registros</span>
+          <h3 id="statTotal">0</h3>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon pending">⏳</div>
+        <div class="metric-info">
+          <span class="metric-label">Pendentes</span>
+          <h3 id="statPending">0</h3>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon completed">✅</div>
+        <div class="metric-info">
+          <span class="metric-label">Concluídos</span>
+          <h3 id="statCompleted">0</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+      <!-- Painel Esquerdo: Formulário -->
+      <section class="card form-card">
+        <div class="card-header">
+          <h2>Nova Anotação / Tarefa</h2>
+          <p class="card-desc">Adicione um novo item preenchendo os dados abaixo.</p>
+        </div>
+        <form id="taskForm" novalidate>
+          <div class="form-group">
+            <label for="titleInput">Título <span class="required">*</span></label>
+            <input type="text" id="titleInput" placeholder="Ex: Estudar conceitos de Virtual DOM" required maxlength="80">
+            <span class="form-error" id="titleError"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="categoryInput">Categoria</label>
+              <select id="categoryInput">
+                <option value="Estudo">📚 Estudo</option>
+                <option value="Projeto">💻 Projeto</option>
+                <option value="Reunião">👥 Reunião</option>
+                <option value="Geral">📌 Geral</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="priorityInput">Prioridade</label>
+              <select id="priorityInput">
+                <option value="Baixa">🟢 Baixa</option>
+                <option value="Média" selected>🟡 Média</option>
+                <option value="Alta">🔴 Alta</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="descInput">Descrição <span class="required">*</span></label>
+            <textarea id="descInput" rows="3" placeholder="Detalhes, links e instruções..." required></textarea>
+            <span class="form-error" id="descError"></span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+            <span>Salvar Registro</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Painel Direito: Lista e Filtros -->
+      <section class="card list-card">
+        <div class="card-header list-header">
+          <div>
+            <h2>Seus Registros</h2>
+            <p class="card-desc">Gerencie, pesquise e filtre suas anotações.</p>
+          </div>
+          <button id="clearCompletedBtn" class="btn btn-sm btn-ghost">Limpar Concluídos</button>
+        </div>
+
+        <!-- Filtros e Busca -->
+        <div class="filter-bar">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Pesquisar por título ou descrição...">
+          </div>
+          <div class="category-filters" id="categoryFilters">
+            <button class="filter-pill active" data-filter="all">Todos</button>
+            <button class="filter-pill" data-filter="Estudo">Estudo</button>
+            <button class="filter-pill" data-filter="Projeto">Projeto</button>
+            <button class="filter-pill" data-filter="Reunião">Reunião</button>
+            <button class="filter-pill" data-filter="Geral">Geral</button>
+          </div>
+        </div>
+
+        <!-- Lista Dinâmica -->
+        <div class="task-list" id="taskList">
+          <!-- Renderizado via JavaScript -->
+        </div>
+
+        <!-- Estado Vazio -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+          <div class="empty-icon">📭</div>
+          <p>Nenhuma tarefa ou anotação encontrada.</p>
+          <small>Cadastre um item no formulário ao lado para começar.</small>
+        </div>
+      </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="main-footer">
+      <p>Disciplina: <strong>Frameworks Front-end</strong> • Prof. Me. Deivison S. Takatu</p>
+      <p>Desenvolvido com HTML5, CSS3 e JavaScript Puro (Vanilla JS)</p>
+    </footer>
+  </div>
+
+  <!-- Toast de Notificações -->
+  <div id="toast" class="toast">Mensagem do sistema</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
